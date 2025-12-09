@@ -1,0 +1,7 @@
+*.db
+*.csv
+*.sqlite*
+*.zip
+*.json
+*.js
+track*
