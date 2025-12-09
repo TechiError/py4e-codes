@@ -1,0 +1,2 @@
+# requirements from the codes
+bs4==0.0.2
