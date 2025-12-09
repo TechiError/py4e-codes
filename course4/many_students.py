@@ -31,7 +31,7 @@ CREATE TABLE Member (
 """
 )
 
-fname = input("Enter file name: ")
+fname = input("Enter file name: ").strip('"')
 if len(fname) < 1:
     fname = "roster_data.json"
 
@@ -85,4 +85,4 @@ cur.execute(
     ON User.id = Member.user_id AND Member.course_id = Course.id
     ORDER BY X LIMIT 1;"""
 )
-print(cur.fetchall())
+print(cur.fetchall()[0][0])
