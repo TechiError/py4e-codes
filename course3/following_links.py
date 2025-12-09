@@ -22,4 +22,5 @@ for i in range(int(count) - 1):
     soup = BeautifulSoup(html, "html.parser")
     tags = soup("a")
     summ = [tag.get("href", None) for tag in tags][int(pos) - 1]
-    print(summ)
+    if i == (int(count) - 2):
+        print(summ.split("_by_")[1].split(".")[0])
