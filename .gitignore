@@ -5,3 +5,4 @@
 *.json
 *.js
 track*
+__pycache__/
