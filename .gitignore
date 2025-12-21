@@ -6,3 +6,4 @@
 *.js
 track*
 __pycache__/
+!flist.json
