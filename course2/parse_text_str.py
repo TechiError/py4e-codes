@@ -1,4 +1,4 @@
-"""Extracting a Number from a Text String"""
+"""Module 1 Assignment 1"""
 
 text = "X-DSPAM-Confidence:    0.8475"
 col_pos = text.find(":")

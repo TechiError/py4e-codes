@@ -1,4 +1,3 @@
-"""Write a program that uses a print function to say 'hello world'
-as shown in 'Desired Output'."""
+"""Module 3 Assignment 1"""
 
 print("hello world")

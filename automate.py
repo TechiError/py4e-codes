@@ -30,7 +30,7 @@ with sync_playwright() as p:
 
     context = browser.contexts[0]
     page = context.new_page()
-    """page.goto("https://www.coursera.org/learn/python-network-data/home/assignments")
+    page.goto("https://www.coursera.org/learn/python-network-data/home/assignments")
     output_file = "not_passed_assignments.txt"
     rows = page.locator('div.rc-AssignmentsTableRowCds[role="row"]')
     page.wait_for_selector('div.rc-AssignmentsTableRowCds[role="row"]')
@@ -71,7 +71,7 @@ with sync_playwright() as p:
             "import handlers.{} as hnd\nhnd.run(item, new_page, flist)".format(
                 flist[item["title"]].replace("course3/", "").replace(".py", "")
             )
-        )"""
+        )
 
     page.goto("https://www.coursera.org/learn/python-databases/home/assignments")
     output_file = "not_passed_assignments.txt"
@@ -107,6 +107,8 @@ with sync_playwright() as p:
                     }
                 )
     for item in dk:
+        if item["title"] == "Databases and Visualization (peer-graded)":
+            break
         page.goto(item["url"])
         page.locator('//*[@id="agreement-checkbox-base"]').click()
         with context.expect_page() as new_page_info:
@@ -117,7 +119,7 @@ with sync_playwright() as p:
         try:
             exec(
                 "import handlers.{} as hnd\nhnd.run(item, new_page, flist)".format(
-                    flist[item["title"]].replace("course4/", "").replace(".py", ""), item["title"]
+                    flist.get(item["title"], "geodata.py").replace("course4/", "").replace(".py", ""), item["title"]
                 )
             )
         except Exception as e:
