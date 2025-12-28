@@ -1,4 +1,19 @@
-from playwright.sync_api import sync_playwright
+import os
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+os.chdir(SCRIPT_DIR)
+
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:
+    import sys
+
+    print("Installing requirements...")
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
+    )
+    from playwright.sync_api import sync_playwright
 import traceback, json
 from datetime import datetime
 import subprocess, winreg
@@ -150,7 +165,7 @@ with sync_playwright() as p:
                     }
                 )
     for item in dk:
-        #if not (item["title"] == "Databases and Visualization (peer-graded)"):
+        # if not (item["title"] == "Databases and Visualization (peer-graded)"):
         #    continue
         page.goto(item["url"])
         page.locator('//*[@id="agreement-checkbox-base"]').click()
