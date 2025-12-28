@@ -2,12 +2,9 @@ import subprocess
 
 def run(item, page, flist):
     fl = flist[item["title"]]
+    page.wait_for_load_state("networkidle")
     locator = page.locator('#body_container pre')
-    if locator.count() >= 3:
-        adata = locator.last.inner_text().strip()
-        print(adata)
-    else:
-        print("Not enough <pre> elements")
+    adata = locator.last.inner_text().strip()
     result = subprocess.run(
         ["python", fl],
         input=adata,

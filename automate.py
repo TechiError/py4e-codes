@@ -68,6 +68,8 @@ with sync_playwright() as p:
 
     context = browser.contexts[0]
     page = context.new_page()
+    page.goto("https://www.coursera.org/")
+    input("Please log in to Coursera and then press Enter here to continue...")
     page.goto("https://www.coursera.org/learn/python-network-data/home/assignments")
     output_file = "not_passed_assignments.txt"
     rows = page.locator('div.rc-AssignmentsTableRowCds[role="row"]')
