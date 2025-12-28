@@ -85,6 +85,7 @@ with sync_playwright() as p:
     page = context.new_page()
     page.goto("https://www.coursera.org/")
     input("Please log in to Coursera and then press Enter here to continue...")
+    page = context.new_page()
     page.goto("https://www.coursera.org/learn/python-network-data/home/assignments")
     output_file = "not_passed_assignments.txt"
     rows = page.locator('div.rc-AssignmentsTableRowCds[role="row"]')
@@ -100,7 +101,7 @@ with sync_playwright() as p:
             if (
                 subtitle.startswith("Graded App")
                 and status != "Passed"
-                and not title.startswith("Peer")
+                #and not title.startswith("Peer")
             ):
                 url = row.locator('[data-e2e="item-title-text"] a').get_attribute(
                     "href"
