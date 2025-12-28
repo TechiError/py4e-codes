@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+import subprocess, winreg
+import traceback, json
+from datetime import datetime
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 os.chdir(SCRIPT_DIR)
@@ -14,9 +17,6 @@ except ImportError:
         [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"]
     )
     from playwright.sync_api import sync_playwright
-import traceback, json
-from datetime import datetime
-import subprocess, winreg
 
 LOG_FILE = "playwright_commands.py"
 

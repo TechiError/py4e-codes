@@ -1,2 +1,5 @@
 # requirements from the codes
 bs4==0.0.2
+playwright==1.57.0
+mss==10.1.0
+pillow==12.0.0
