@@ -1,8 +1,29 @@
 from playwright.sync_api import sync_playwright
 import traceback, json
 from datetime import datetime
+import subprocess, winreg
 
 LOG_FILE = "playwright_commands.py"
+
+
+def find_chrome():
+    reg_paths = [
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe",
+        r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe",
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe",
+        r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe",
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\firefox.exe",
+        r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\App Paths\firefox.exe",
+    ]
+
+    for path in reg_paths:
+        try:
+            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path) as key:
+                return winreg.QueryValue(key, None)
+        except FileNotFoundError:
+            pass
+
+    raise RuntimeError("Chrome not found")
 
 
 def multiline_input(prompt=">>> "):
@@ -26,6 +47,23 @@ def save_code(code: str):
 
 
 with sync_playwright() as p:
+    # Connect to an existing Chrome instance or launch a new one
+    chrome = find_chrome()
+    cmd = (
+        'start "" '
+        f'"{chrome}" '
+        "--remote-debugging-port=9222 "
+        '--user-data-dir="C:\\chrome-selenium" '
+        "--no-first-run "
+        "--no-default-browser-check"
+    )
+    subprocess.run(
+        cmd,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        shell=True,
+    )
+    subprocess.run("timeout /t 5", shell=True)
     browser = p.chromium.connect_over_cdp("http://127.0.0.1:9222")
 
     context = browser.contexts[0]
@@ -42,7 +80,11 @@ with sync_playwright() as p:
             title = row.locator('[data-e2e="item-title-text"] a').inner_text().strip()
             subtitle = row.locator(".item-subtitle-text p").inner_text().strip()
             status = row.locator(".status-column-text p").inner_text().strip()
-            if subtitle.startswith("Graded App") and status != "Passed" and not title.startswith("Peer"):
+            if (
+                subtitle.startswith("Graded App")
+                and status != "Passed"
+                and not title.startswith("Peer")
+            ):
                 url = row.locator('[data-e2e="item-title-text"] a').get_attribute(
                     "href"
                 )
@@ -72,7 +114,6 @@ with sync_playwright() as p:
                 flist[item["title"]].replace("course3/", "").replace(".py", "")
             )
         )
-
     page.goto("https://www.coursera.org/learn/python-databases/home/assignments")
     output_file = "not_passed_assignments.txt"
     rows = page.locator('div.rc-AssignmentsTableRowCds[role="row"]')
@@ -107,8 +148,8 @@ with sync_playwright() as p:
                     }
                 )
     for item in dk:
-        if item["title"] == "Databases and Visualization (peer-graded)":
-            break
+        #if not (item["title"] == "Databases and Visualization (peer-graded)"):
+        #    continue
         page.goto(item["url"])
         page.locator('//*[@id="agreement-checkbox-base"]').click()
         with context.expect_page() as new_page_info:
@@ -117,9 +158,20 @@ with sync_playwright() as p:
             ).click()
         new_page = new_page_info.value
         try:
+            print(
+                "import handlers.{} as hnd\nhnd.run(item, new_page, flist)".format(
+                    flist.get(item["title"], "")
+                    .replace("course4/", "")
+                    .replace(".py", ""),
+                    item["title"],
+                )
+            )
             exec(
                 "import handlers.{} as hnd\nhnd.run(item, new_page, flist)".format(
-                    flist.get(item["title"], "geodata.py").replace("course4/", "").replace(".py", ""), item["title"]
+                    flist.get(item["title"], "")
+                    .replace("course4/", "")
+                    .replace(".py", ""),
+                    item["title"],
                 )
             )
         except Exception as e:
@@ -128,7 +180,7 @@ with sync_playwright() as p:
 
     print("\nConnected to existing Chrome.")
     print("Available objects: page, context, browser")
-    print("All executed code is saved to:", LOG_FILE)
+    # print("All executed code is saved to:", LOG_FILE)
     print("Ctrl+C to exit.\n")
 
     while True:
@@ -137,7 +189,7 @@ with sync_playwright() as p:
             if not code.strip():
                 continue
 
-            save_code(code)
+            # save_code(code)
             exec(code, globals(), locals())
 
         except KeyboardInterrupt:

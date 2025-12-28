@@ -1,10 +1,9 @@
 import subprocess, re
 
+
 def run(item, page, flist):
     fl = flist[item["title"]]
-    adata = page.locator(
-        '//*[@id="body_container"]/p[7]/a'
-    ).get_attribute("href")
+    adata = page.locator('//*[@id="body_container"]/p[7]/a').get_attribute("href")
     result = subprocess.run(
         ["python", fl],
         input=adata,

@@ -4,12 +4,14 @@ db = sqlite3.connect("first.db")
 cursor = db.cursor()
 
 cursor.executescript("DROP TABLE IF EXISTS Ages;")
-cursor.executescript("""
+cursor.executescript(
+    """
 CREATE TABLE Ages (
     name VARCHAR(128),
     age INTEGER
 );
-""")
+"""
+)
 
 print("Enter SQL statements (empty line to finish):")
 

@@ -9,5 +9,7 @@
     "Counting Email in a Database": "course4/email_count.py",
     "Multi-Table Database - Tracks": "course4/multi_table_track_db.py",
     "Many Students in Many Courses": "course4/many_students.py",
-    "Our First Database": "course4/first_db.py"
+    "Our First Database": "course4/first_db.py",
+    "Databases and Visualization (peer-graded)": "geodata.py",
+    "Peer Review: Installing and Running Python Screen Shots": "peer3.py"
 }

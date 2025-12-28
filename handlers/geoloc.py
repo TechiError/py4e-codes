@@ -2,7 +2,12 @@ import subprocess
 
 def run(item, page, flist):
     fl = flist[item["title"]]
-    adata = page.locator('//*[@id="body_container"]/pre[3]').inner_text().strip()
+    locator = page.locator('#body_container pre')
+    if locator.count() >= 3:
+        adata = locator.last.inner_text().strip()
+        print(adata)
+    else:
+        print("Not enough <pre> elements")
     result = subprocess.run(
         ["python", fl],
         input=adata,
