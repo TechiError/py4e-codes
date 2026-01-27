@@ -5,6 +5,7 @@ import os, re
 def submit_review(page):
     x = page.locator('//*[@id="body_container"]/p[3]').inner_text().strip()
     # use regex to check first number 
+    print(x)
     submitted = re.findall(r"(\d+)", x)[0]
     print(f"Reviews submitted so far: {submitted}")
     if int(submitted) >= 8:

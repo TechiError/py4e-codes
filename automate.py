@@ -101,7 +101,7 @@ with sync_playwright() as p:
             if (
                 subtitle.startswith("Graded App")
                 and status != "Passed"
-                #and not title.startswith("Peer")
+                # and not title.startswith("Peer")
             ):
                 url = row.locator('[data-e2e="item-title-text"] a').get_attribute(
                     "href"
@@ -123,9 +123,15 @@ with sync_playwright() as p:
         page.goto(item["url"])
         page.locator('//*[@id="agreement-checkbox-base"]').click()
         with context.expect_page() as new_page_info:
-            page.locator(
-                '//*[@id="main-container"]/div[1]/div/div/div/div/div/div[1]/div[4]/div/div[3]/div/form/button'
-            ).click()
+            page.wait_for_timeout(3000)
+            page.evaluate(
+                """() => {
+        const form = document.querySelector('form[data-testid="lti-launch-form"]');
+        if (form) {
+            form.submit();
+        }
+    }"""
+            )
         new_page = new_page_info.value
         exec(
             "import handlers.{} as hnd\nhnd.run(item, new_page, flist)".format(
@@ -147,7 +153,7 @@ with sync_playwright() as p:
             if (
                 subtitle.startswith("Graded App")
                 and status != "Passed"
-                and not title.startswith("Peer")
+                #and not title.startswith("Peer")
             ):
                 url = row.locator('[data-e2e="item-title-text"] a').get_attribute(
                     "href"
@@ -171,9 +177,15 @@ with sync_playwright() as p:
         page.goto(item["url"])
         page.locator('//*[@id="agreement-checkbox-base"]').click()
         with context.expect_page() as new_page_info:
-            page.locator(
-                '//*[@id="main-container"]/div[1]/div/div/div/div/div/div[1]/div[4]/div/div[3]/div/form/button'
-            ).click()
+            page.wait_for_load_state("networkidle")
+            page.evaluate(
+                """() => {
+        const form = document.querySelector('form[data-testid="lti-launch-form"]');
+        if (form) {
+            form.submit();
+        }
+    }"""
+            )
         new_page = new_page_info.value
         try:
             print(
