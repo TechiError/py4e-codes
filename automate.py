@@ -83,7 +83,7 @@ with sync_playwright() as p:
 
     context = browser.contexts[0]
     page = context.new_page()
-    page.goto("https://www.coursera.org/")
+    page.goto("https://www.coursera.org/", wait_until="commit")
     input("Please log in to Coursera and then press Enter here to continue...")
     page = context.new_page()
     page.goto("https://www.coursera.org/learn/python-network-data/home/assignments")
